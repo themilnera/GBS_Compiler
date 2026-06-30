@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36811.4 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GBSCompiler", "GBSCompiler\GBSCompiler.csproj", "{7ECE8D7E-0B78-4245-8A7F-26E88A0EBAD2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7ECE8D7E-0B78-4245-8A7F-26E88A0EBAD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ECE8D7E-0B78-4245-8A7F-26E88A0EBAD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ECE8D7E-0B78-4245-8A7F-26E88A0EBAD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ECE8D7E-0B78-4245-8A7F-26E88A0EBAD2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4E43F561-4F3E-4CF8-8E72-3093831E651B}
+	EndGlobalSection
+EndGlobal
