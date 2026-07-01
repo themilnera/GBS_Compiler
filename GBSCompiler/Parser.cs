@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace GBSCompiler
 {
+	
     internal class Parser
     {
+		
     }
 }
