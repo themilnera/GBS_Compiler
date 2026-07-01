@@ -11,14 +11,14 @@ namespace GBSCompiler
 	public enum Kind
 	{
 		IDENTIFIER,
-		T_NUM8,
-		T_NUM16,
+		T_INT8,
+		T_INT16,
 		T_CHAR,
 		T_STRING,
 		T_ARRAY,
 
-		NUM8,
-		NUM16,
+		INT8,
+		INT16,
 		CHAR,
 		STRING,
 		ARRAY,
@@ -36,6 +36,14 @@ namespace GBSCompiler
 		MULT,// *
 		DIV,//  /
 		MOD,//  %
+
+		INC,// ++
+		DEC,// --
+
+		ASADD,// +=
+		ASMIN,// -=
+		ASMULT,// *=
+		ASDIV, // /=
 
 		AND,// and &&
 		OR,// or &&

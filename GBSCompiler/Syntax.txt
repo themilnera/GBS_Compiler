@@ -1,0 +1,6 @@
+﻿
+//Function
+func [identifier](args)
+{
+	ret [value];
+}

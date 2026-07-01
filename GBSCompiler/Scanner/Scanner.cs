@@ -10,11 +10,11 @@ namespace GBSCompiler
     {
 		public static Dictionary<string, Kind> Keywords = new Dictionary<string, Kind>
 		{
-			{ "NUM8", Kind.T_NUM8 },
-			{ "NUM16", Kind.T_NUM16 },
+			{ "INT8", Kind.T_INT8 },
+			{ "INT16", Kind.T_INT16 },
 			{ "STRING", Kind.T_STRING },
 			{ "CHAR", Kind.T_CHAR },
-			{ "ARRAY", Kind.T_ARRAY },
+			{ "ARRAY", Kind.T_ARRAY }, //not yet implemented
 			{ "IF", Kind.IF },
 			{ "ELSE", Kind.ELSE },
 			{ "WHILE", Kind.WHILE },
@@ -37,8 +37,8 @@ namespace GBSCompiler
 			{ "*", Kind.MULT },
 			{ "/", Kind.DIV },
 			{ "%", Kind.MOD },
-			{ "`", Kind.CAR },
-			{ "\"", Kind.QUT },
+			{ "++", Kind.INC },
+			{ "--", Kind.DEC },
 			{ "(", Kind.LPAR },
 			{ ")", Kind.RPAR },
 			{ "[", Kind.LSQU },
@@ -54,7 +54,6 @@ namespace GBSCompiler
 			int i = 0;
             while(i < source.Length) 
             {
-				Console.Write(source[i]);
                 if(IsWhiteSpace(source[i]))
                 {
 					i++;
@@ -70,11 +69,11 @@ namespace GBSCompiler
                         i++;
                     }
                     if(int.Parse(num.ToString()) > 255){
-                        tokens.Add(new Token(Kind.NUM16, num.ToString()));
+                        tokens.Add(new Token(Kind.INT16, num.ToString()));
                     }
                     else
                     {
-                        tokens.Add(new Token(Kind.NUM8, num.ToString()));
+                        tokens.Add(new Token(Kind.INT8, num.ToString()));
                     }
                 }
 
@@ -92,13 +91,17 @@ namespace GBSCompiler
 
 				else if (source[i] == '\"' || source[i] == '\''){
 					StringBuilder str = new StringBuilder();
+					char quoteUsed = source[i];
 					i++;
-					while(i < source.Length && (source[i] != '\"' || source[i] != '\'')){
+		
+					while (i < source.Length && source[i] != quoteUsed){
 						str.Append(source[i]);
 						i++;
 					}
-					str.Remove(str.Length - 1, 1);
+					
 					tokens.Add(new Token(Kind.STRING, str.ToString()));
+					
+					i++;
 				}
 
 				else if (ISValidSymbol(source[i])){
@@ -117,6 +120,9 @@ namespace GBSCompiler
 						throw new Exception("Unrecognized symbol: "+symbol.ToString());
 					}
                 }
+				else{
+					i++;
+				}
 				
             }
             tokens.Add(new Token(Kind.EOF, "0"));
@@ -144,14 +150,13 @@ namespace GBSCompiler
             return false;
         }
         static bool ISValidSymbol(char c){
-			//Console.WriteLine(c);
             if(Symbols.ContainsKey(c.ToString()) || c == '!'){
                 return true;
             }
             return false;
         }
 		static bool IsStackingSymbol(char c){
-			if(c == '!' || c == '=' || c == '>' || c == '<'){
+			if(c == '!' || c == '=' || c == '>' || c == '<' || c == '+' || c == '-' || c == '*' || c == '/'){
 				return true;
 			}
 			return false;

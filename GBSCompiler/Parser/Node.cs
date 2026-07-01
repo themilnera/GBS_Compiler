@@ -10,16 +10,41 @@ namespace GBSCompiler
 	internal class Program : Node
 	{
 		public Node[] Body { get; set; }
-		public Program(string kind, Node[] body)
+		public Program(Node[] body)
 		{
 			Body = body;
+		}
+	}
+	internal class Int8 : Node
+	{
+		public int Value { get; set; }
+		public Int8(int value) 
+		{ 
+			Value = value;
+		}
+	}
+
+	internal class Int16 : Node
+	{
+		public int Value { get; set; }
+		public Int16(int value)
+		{
+			Value = value;
+		}
+	}
+
+	internal class String : Node 
+	{
+		public string Value { get; set; }
+		public String(string value) {
+			Value = value;
 		}
 	}
 
 	internal class Assignment : Node
 	{
 		public Node Value { get; set; }
-		public Assignment(string kind, Node value){
+		public Assignment(Node value){
 			Value = value;
 		}
 	}
@@ -28,10 +53,20 @@ namespace GBSCompiler
 	{
 		public Node[] Elements { get; set; }
 		public string[] Ops { get; set; }
-		public Operation(string kind, string[] ops, Node[] elements)
+		public Operation(string[] ops, Node[] elements)
 		{
 			Ops = ops;
 			Elements = elements;
+		}
+	}
+	internal class Condition : Node 
+	{
+		public Node[] Elements { get; set; }
+		public string[] Ops { get; set; }
+		public Condition(Node[] elements, string[] ops)
+		{ 
+			Elements = elements;
+			Ops = ops;
 		}
 	}
 
@@ -45,4 +80,38 @@ namespace GBSCompiler
 			Conditions = conditions;
 		}
 	}
+
+	internal class Else : Node 
+	{
+		public Node[] Body { get; set; }
+		public Else(Node[] body)
+		{
+			Body = body;
+		}
+	}
+
+	internal class While : Node
+	{
+		public Node[] Body { get; set; }
+		public Node[] Conditions { get; set; }
+		public While(Node[] conditions, Node[] body){
+			Body = body;
+			Conditions = conditions;
+		}
+	}
+
+	internal class For : Node 
+	{
+		public Node[] Body { get; set; }
+		public Node Assignment { get; set; }
+		public Node Condition { get; set; }
+		public Node Operation { get; set; }
+	}
+
+	internal class Function : Node
+	{
+		public Node[] Body { get; set; }
+		public Node[] Arguments { get; set; }
+	}
+
 }

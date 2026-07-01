@@ -1,0 +1,15 @@
+﻿int16 number = 25;
+string value = "some text";
+if(number >= 26){
+	number++;
+}
+
+for(int8 i = 1; i < 25, i++){
+	if(i == number){
+		value = "whatever I don't care";
+	}
+}
+
+func add(int16 a, int16 b){
+	ret 0;
+}
