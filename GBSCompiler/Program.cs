@@ -5,7 +5,8 @@ string source =
 "NUM8 number2 = 12;\n" +
 "if(number2 > number1){\n" +
 "return number + number2;\n" +
-"}";
+"}" +
+"string name = \"name\"";
 
 Token[] scan = Scanner.Scan(source);
 foreach  (Token token in scan){
