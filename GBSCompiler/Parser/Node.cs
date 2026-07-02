@@ -40,33 +40,49 @@ namespace GBSCompiler
 			Value = value;
 		}
 	}
+	internal class Identifier: Node
+	{
+		public string Name{  get; set; }
+		public Identifier(string name){
+			Name = name;
+		}
+	}
 
 	internal class Assignment : Node
 	{
 		public Node Value { get; set; }
-		public Assignment(Node value){
+		public string Name { get; set; }
+		public string Type { get; set; }
+		public Assignment(Node value, string name, string type)
+		{
 			Value = value;
+			Name = name;
+			Type = type;
 		}
 	}
 
 	internal class Operation : Node 
 	{
-		public Node[] Elements { get; set; }
-		public string[] Ops { get; set; }
-		public Operation(string[] ops, Node[] elements)
+		public string Op { get; set; }
+		public Node Left { get; set; }
+		public Node Right { get; set; }
+		public Operation(string op, Node left, Node right)
 		{
-			Ops = ops;
-			Elements = elements;
+			Op = op;
+			Left = left;
+			Right = right;
 		}
 	}
 	internal class Condition : Node 
 	{
-		public Node[] Elements { get; set; }
-		public string[] Ops { get; set; }
-		public Condition(Node[] elements, string[] ops)
+		public string Op { get; set; }
+		public Node Left{ get; set; }
+		public Node Right{ get; set; }
+		public Condition(string op, Node left, Node right)
 		{ 
-			Elements = elements;
-			Ops = ops;
+			Op = op;
+			Left = left;
+			Right = right;
 		}
 	}
 
@@ -76,8 +92,8 @@ namespace GBSCompiler
 		public Node[] Body { get; set; }
 		public If(Node[] conditions, Node[] body)
 		{
-			Body = body;
 			Conditions = conditions;
+			Body = body;
 		}
 	}
 
@@ -92,8 +108,8 @@ namespace GBSCompiler
 
 	internal class While : Node
 	{
-		public Node[] Body { get; set; }
 		public Node[] Conditions { get; set; }
+		public Node[] Body { get; set; }
 		public While(Node[] conditions, Node[] body){
 			Body = body;
 			Conditions = conditions;
@@ -102,16 +118,27 @@ namespace GBSCompiler
 
 	internal class For : Node 
 	{
-		public Node[] Body { get; set; }
 		public Node Assignment { get; set; }
 		public Node Condition { get; set; }
 		public Node Operation { get; set; }
+		public Node[] Body { get; set; }
+		public For(Node assignment, Node condition, Node operation, Node[] body){
+			Assignment = assignment;
+			Condition = condition;
+			Operation = operation;
+			Body = body;
+		}
 	}
 
 	internal class Function : Node
 	{
-		public Node[] Body { get; set; }
 		public Node[] Arguments { get; set; }
+		public Node[] Body { get; set; }
+
+		public Function(Node[] arguments, Node[] body){
+			Arguments = arguments;
+			Body = body;
+		}
 	}
 
 }

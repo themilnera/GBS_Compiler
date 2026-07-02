@@ -14,7 +14,8 @@ namespace GBSCompiler
 			{ "INT16", Kind.T_INT16 },
 			{ "STRING", Kind.T_STRING },
 			{ "CHAR", Kind.T_CHAR },
-			{ "ARRAY", Kind.T_ARRAY }, //not yet implemented
+			{ "BOOL", Kind.T_BOOL }, // not yet implemented
+			{ "ARRAY", Kind.T_ARRAY }, // not yet implemented
 			{ "IF", Kind.IF },
 			{ "ELSE", Kind.ELSE },
 			{ "WHILE", Kind.WHILE },

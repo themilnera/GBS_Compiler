@@ -15,6 +15,7 @@ namespace GBSCompiler
 		T_INT16,
 		T_CHAR,
 		T_STRING,
+		T_BOOL,
 		T_ARRAY,
 
 		INT8,
