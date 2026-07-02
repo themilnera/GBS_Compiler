@@ -17,6 +17,7 @@ namespace GBSCompiler
 			Tokens = tokens;
 		}
 		private Token peek(){
+			Console.WriteLine(Tokens[i].value);
 			return Tokens[i];
 		}
 		private Token peek(int offset){
@@ -44,7 +45,7 @@ namespace GBSCompiler
 			}
 			else if(token.kind == Kind.IF)
 			{
-				return parseCondition();
+				return parseIf();
 			}
 			//else if(token.kind == Kind.ELSE)
 			//{
@@ -62,7 +63,25 @@ namespace GBSCompiler
 			//{
 
 			//}
-			else return new Node();
+			else
+			{
+				throw new Exception("Unrecognized token: "+token.kind);
+			}
+		}
+
+		private Node parseIf(){
+			consume(Kind.IF);
+			consume(Kind.LPAR);
+			Node condition = parseCondition();
+			consume(Kind.RPAR);
+			consume(Kind.LBRAC);
+			List<Node> body = new List<Node>();
+			while(peek().kind != Kind.RBRAC)
+			{
+				body.Add(branch());
+			}
+			consume(Kind.RBRAC);
+			return new If(condition, body.ToArray());
 		}
 		private Node parseAssignment(){
 			Token token = peek();
@@ -83,9 +102,10 @@ namespace GBSCompiler
 					throw new Exception("Assignment: "+token.value+" occurred prior to initialization.");
 				}
 				consume();
-
+				consume(Kind.ASSN);
 				Node value = parseExpression();
 				Assignment assn = new Assignment(value, name, type);
+				consume(Kind.SEMC);
 				return assn;
 			}
 
@@ -99,6 +119,7 @@ namespace GBSCompiler
 				Node value = parseExpression();
 				Assignment assn = new Assignment(value, name, type);
 				Assigned.Add(assn);
+				consume(Kind.SEMC);
 				return assn;
 			}
 			else
@@ -139,7 +160,6 @@ namespace GBSCompiler
 				throw new Exception("Unexpected token: "+token.kind);	
 			}
 
-			//if node is numeric	
 		}
 		private Node parseMathExpression()
 		{
@@ -202,6 +222,7 @@ namespace GBSCompiler
 				}
 				condition = false;
 			}
+
 			return left;
 		}
 
@@ -227,7 +248,7 @@ namespace GBSCompiler
 			throw new Exception("Unexpected token: "+token.kind);
 		}
 
-		public Node ParseTokens(){
+		public Program ParseTokens(){
 			List<Node> body = new List<Node>();
 			while(peek().kind != Kind.EOF){
 				body.Add(branch());

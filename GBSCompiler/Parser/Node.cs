@@ -88,11 +88,11 @@ namespace GBSCompiler
 
 	internal class If : Node
 	{
-		public Node[] Conditions { get; set; }
+		public Node Condition { get; set; }
 		public Node[] Body { get; set; }
-		public If(Node[] conditions, Node[] body)
+		public If(Node condition, Node[] body)
 		{
-			Conditions = conditions;
+			Condition = condition;
 			Body = body;
 		}
 	}

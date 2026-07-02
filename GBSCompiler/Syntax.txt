@@ -4,3 +4,10 @@ func [identifier](args)
 {
 	ret [value];
 }
+
+//Assignment
+int8 x = 10;
+Type Identifier AssignmentOperator Value
+
+//If statement
+if()
