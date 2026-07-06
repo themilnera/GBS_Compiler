@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace GBSCompiler
 {
-	//STILL MISSING:
-	// && || += -= *= /= ++ -- 
 	public enum Kind
 	{
 		IDENTIFIER,
@@ -49,7 +42,7 @@ namespace GBSCompiler
 		AND,// and &&
 		OR,// or &&
 
-		CAR,//  `
+		INLINEASM,//  `
 		QUT,//  "
 
 		IF,
@@ -57,6 +50,7 @@ namespace GBSCompiler
 		WHILE,
 		FOR,
 
+		CALL,
 		FUNC,
 		RET,
 
@@ -67,6 +61,7 @@ namespace GBSCompiler
 		LBRAC,// {
 		RBRAC,// }
 		SEMC,//  ;
+		COM, //  ,
 		CMT,//   //
 
 		EOF

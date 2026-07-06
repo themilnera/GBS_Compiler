@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
 using System.Text;
-using System.Threading.Tasks;
 
 namespace GBSCompiler
 {
@@ -20,6 +17,7 @@ namespace GBSCompiler
 			{ "ELSE", Kind.ELSE },
 			{ "WHILE", Kind.WHILE },
 			{ "FOR", Kind.FOR },
+			{ "CALL", Kind.CALL },
 			{ "FUNC", Kind.FUNC },
 			{ "RET", Kind.RET },
 			{ "AND", Kind.AND },
@@ -47,6 +45,7 @@ namespace GBSCompiler
 			{ "{", Kind.LBRAC },
 			{ "}", Kind.RBRAC },
 			{ ";", Kind.SEMC },
+			{ ",", Kind.COM },
 			{ "//", Kind.CMT }
 		};
 		public static Token[] Scan(string source)
@@ -104,7 +103,14 @@ namespace GBSCompiler
 					
 					i++;
 				}
-
+				else if (source[i] == '`'){
+					i++;
+					StringBuilder str = new StringBuilder();
+					while (i < source.Length && source[i] != '`'){
+						str.Append(i);
+					}
+					tokens.Add(new Token(Kind.INLINEASM, str.ToString()));
+				}
 				else if (ISValidSymbol(source[i])){
 					StringBuilder symbol = new StringBuilder();
                     symbol.Append(source[i]);

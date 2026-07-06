@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
+﻿
 namespace GBSCompiler
 {
     internal class Parser
@@ -59,14 +52,67 @@ namespace GBSCompiler
 			//{
 
 			//}
-			//else if(token.kind == Kind.FUNC)
-			//{
-
-			//}
+			else if (token.kind == Kind.FUNC)
+			{
+				return parseFunc();
+			}
+			else if (token.kind == Kind.CALL)
+			{
+				return parseCall();
+			}
+			else if (token.kind == Kind.INLINEASM){
+				return parseInlineASM();
+			}
 			else
 			{
-				throw new Exception("Unrecognized token: "+token.kind);
+				throw new Exception("Unrecognized token: " + token.kind);
 			}
+		}
+
+		private Node parseInlineASM(){
+			return new InlineASM(consume().value);
+		}
+
+		private Node parseCall(){
+			consume(Kind.CALL);
+			string name = consume(Kind.IDENTIFIER).value;
+			consume(Kind.LPAR);
+			List<Node> args = new List<Node>();
+			while(peek().kind != Kind.RPAR){
+				args.Add(parseExpression());
+				if(peek().kind == Kind.COM){
+					consume(Kind.COM);
+				}
+			}
+			consume(Kind.RPAR);
+			consume(Kind.SEMC);
+			return new Call(name, args.ToArray());
+		}
+		private Node parseFunc()
+		{
+			consume(Kind.FUNC);
+			string name = consume(Kind.IDENTIFIER).value;
+			consume(Kind.LPAR);
+			List<Node> args = new List<Node>();
+			
+			while (peek().kind != Kind.RPAR){
+				Node assn = parseAssignment();
+				args.Add(assn);
+				if(peek().kind == Kind.COM){ 
+					consume(Kind.COM);
+				}
+			}
+			consume(Kind.RPAR);
+			consume(Kind.LBRAC);
+			List<Node> body = new List<Node>();
+			while(peek().kind != Kind.RET){
+				body.Add(branch());
+			}
+			consume(Kind.RET);
+			Node @return = parseExpression();
+			consume(Kind.SEMC);
+			consume(Kind.RBRAC);
+			return new Function(name, args.ToArray(), body.ToArray(), @return);
 		}
 
 		private Node parseIf(){
@@ -83,6 +129,7 @@ namespace GBSCompiler
 			consume(Kind.RBRAC);
 			return new If(condition, body.ToArray());
 		}
+		
 		private Node parseAssignment(){
 			Token token = peek();
 

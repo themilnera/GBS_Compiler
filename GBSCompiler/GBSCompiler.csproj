@@ -15,8 +15,4 @@
     <None Include="C:\Users\adamm\source\repos\GBSCompiler\GBSCompiler\.editorconfig" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Generator\" />
-  </ItemGroup>
-
 </Project>

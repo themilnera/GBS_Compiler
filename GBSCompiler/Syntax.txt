@@ -1,9 +1,12 @@
 ﻿
 //Function
-func [identifier](args)
-{
-	ret [value];
+func name(int arg1 = 0, int arg2 = 0){
+	ret 0;
 }
+call func(2, 5);
+//we're limited to one return statement at the moment
+//function arguments are assignments, needs a default
+//function call params evaluate as expressions
 
 //Assignment
 int8 x = 10;

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace GBSCompiler
 {
 	internal class Node{}
@@ -132,11 +127,32 @@ namespace GBSCompiler
 
 	internal class Function : Node
 	{
+		public string Name { get; set; }
 		public Node[] Arguments { get; set; }
 		public Node[] Body { get; set; }
-
-		public Function(Node[] arguments, Node[] body){
+		public Node Return { get; set; }
+		public Function(string name, Node[] arguments, Node[] body, Node @return)
+		{
+			Name = name;
 			Arguments = arguments;
+			Body = body;
+			Return = @return;
+		}
+	}
+	internal class Call : Node
+	{
+		public string Name { get; set; }
+		public Node[] Arguments { get; set; }
+		public Call(string name, Node[] arguments)
+		{
+			Name = name;
+			Arguments = arguments;
+		}
+	}
+	internal class InlineASM : Node
+	{
+		public string Body { get; set; }
+		public InlineASM(string body){
 			Body = body;
 		}
 	}
