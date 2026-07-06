@@ -107,7 +107,8 @@ namespace GBSCompiler
 					i++;
 					StringBuilder str = new StringBuilder();
 					while (i < source.Length && source[i] != '`'){
-						str.Append(i);
+						str.Append(source[i]);
+						i++;
 					}
 					tokens.Add(new Token(Kind.INLINEASM, str.ToString()));
 				}

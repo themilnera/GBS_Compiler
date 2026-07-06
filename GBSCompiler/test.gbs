@@ -10,6 +10,7 @@ func main(){
 call main();
 
 `
+PMI:
 INCLUDE "BreakoutTiles.asm"
 	LoadTiles:
 		ld de, Tiles 
@@ -22,4 +23,5 @@ INCLUDE "BreakoutTiles.asm"
 		ld hl, $9800 ; tilemap offset
 		ld bc, TilemapEnd - Tilemap 
 	call MemCopy
+END_PMI:
 `

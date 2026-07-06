@@ -8,7 +8,7 @@ namespace GBSCompiler
 		{
 			lines.Add(line +"\n");
 		}
-		public static string GetDefaults(){
+		public static List<string> GetDefaults(){
 			emit("INCLUDE \"hardware.inc\"");
 			emit("SECTION \"Header\", ROM0[$100]");
 			emit("ds $150 - @, 0");
@@ -94,7 +94,8 @@ namespace GBSCompiler
 			emit("VBlankHandler:");
 			emit("call UpdateKeys");
 			emit("call RunDMA");
-			emit(";VBH_INSERT");
+			emit("VBHI:");
+			emit("END_VBHI:");
 			emit("pop af");
 			emit("pop bc");
 			emit("pop de");
@@ -111,8 +112,11 @@ namespace GBSCompiler
 			emit("Main:");
 			emit("halt");
 			emit("jp Main");
+			emit("PMI:");
+			emit("END_PMI:");
+			
 
-			return string.Concat(lines);
+			return lines;
 		}
 	}
 }

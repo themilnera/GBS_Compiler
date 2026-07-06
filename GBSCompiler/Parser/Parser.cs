@@ -10,7 +10,6 @@ namespace GBSCompiler
 			Tokens = tokens;
 		}
 		private Token peek(){
-			Console.WriteLine(Tokens[i].value);
 			return Tokens[i];
 		}
 		private Token peek(int offset){
