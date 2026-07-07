@@ -12,7 +12,7 @@ namespace GBSCompiler
 			emit("INCLUDE \"hardware.inc\"");
 			emit("SECTION \"Header\", ROM0[$100]");
 			emit("nop");
-			emit("jp TurnOffLCD");
+			emit("jp Init");
 			emit("ds $150 - @, 0");
 			emit("");
 			
@@ -23,21 +23,46 @@ namespace GBSCompiler
 			emit("");
 
 			emit("SECTION \"Code\", ROM0[$150]");
-			emit("SCODI:");
-			emit("END_SCODI:");
+			emit("Init:");
+			emit("di");
+			emit("call TurnOffLCD");
 			emit("CopyRunDMA:");
 			emit("ld hl, RunDMA ;copy RunDMA to HRAM");
 			emit("ld de, $FF80");
 			emit("ld bc, EndDMA - RunDMA");
 			emit("call MemCopy");
 			emit("");
+			emit("call ZeroVRAM");
+			emit("INITI:");
+			emit("END_INITI:");
 
+
+			emit("jp Start");
+			emit("");
+
+			emit("SCODI:");
+			emit("END_SCODI:");
+			emit("");
+
+			emit("Start:");
+			
+			emit("call TurnOnLCDPalette0");
 			emit("InitVars:");
 			emit("ld a, 0");
 			emit("ld [wCurKeys], a");
 			emit("ld [wNewKeys], a");
 			emit("ld [GameState], a");
-			emit("jp Start");
+			emit("ei");
+			emit("jp Main");
+			emit("");
+
+			emit("Main:");
+			emit("halt");
+			emit("jp Main");
+			emit("");
+			
+			emit("PMI:");
+			emit("END_PMI:");
 			emit("");
 
 			emit("VBlankHandler:");
@@ -50,22 +75,6 @@ namespace GBSCompiler
 			emit("pop de");
 			emit("pop hl");
 			emit("reti");
-			emit("");
-
-			emit("Start:");
-			emit("INITI:");
-			emit("END_INITI:");
-			emit("call TurnOnLCDPalette0");
-			emit("jp Main");
-			emit("");
-
-			emit("Main:");
-			emit("halt");
-			emit("jp Main");
-			emit("");
-			
-			emit("PMI:");
-			emit("END_PMI:");
 			emit("");
 
 			emit("UpdateKeys:");
@@ -107,6 +116,18 @@ namespace GBSCompiler
 			emit("jp nz, MemCopy");
 			emit("ret");
 			emit("");
+
+			emit("ZeroVRAM:");
+			emit("ld hl, $8000");
+			emit("ld bc, $9FFF - $8000");
+			emit(".zero:");
+			emit("ld a, 0");
+			emit("ld [hli], a");
+			emit("dec bc");
+			emit("ld a, b");
+			emit("or a, c");
+			emit("jp nz, .zero");
+			emit("ret");
 
 			emit("RunDMA:");
 			emit("ld a, HIGH(OAMBuffer)");
