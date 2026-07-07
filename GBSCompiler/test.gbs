@@ -10,9 +10,9 @@ func main(){
 call main();
 
 `
-PMI:
+SCODI:
 INCLUDE "BreakoutTiles.asm"
-END_PMI:
+END_SCODI:
 
 INITI:
 	LoadTiles:
