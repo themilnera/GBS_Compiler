@@ -158,9 +158,19 @@ namespace GBSCompiler
 			//initialization
 			else if(token.kind == Kind.T_STRING || token.kind == Kind.T_CHAR || token.kind == Kind.T_INT8 || token.kind == Kind.T_INT16 || token.kind == Kind.T_BOOL || token.kind == Kind.T_ARRAY)
 			{
+
 				string type = token.kind.ToString();
 				consume();
+
 				string name = consume(Kind.IDENTIFIER).value;
+				foreach (Assignment a in Assigned)
+				{
+					if (a.Name == name)
+					{
+						throw new Exception("Identifier "+name+" cannot re-initialized.");
+					}
+				}
+
 				consume(Kind.ASSN);
 				Node value = parseExpression();
 				Assignment assn = new Assignment(value, name, type);
