@@ -109,6 +109,9 @@ namespace GBSCompiler
 			emit("ld [rOBP0], a");
 			emit("ld [rBGP], a");
 			emit("");
+			emit("INITI:");
+			emit("END_INITI:");
+			emit("");
 			emit("Main:");
 			emit("halt");
 			emit("jp Main");

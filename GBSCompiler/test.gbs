@@ -12,6 +12,9 @@ call main();
 `
 PMI:
 INCLUDE "BreakoutTiles.asm"
+END_PMI:
+
+INITI:
 	LoadTiles:
 		ld de, Tiles 
 		; Max tiles: 384
@@ -23,5 +26,5 @@ INCLUDE "BreakoutTiles.asm"
 		ld hl, $9800 ; tilemap offset
 		ld bc, TilemapEnd - Tilemap 
 	call MemCopy
-END_PMI:
+END_INITI:
 `

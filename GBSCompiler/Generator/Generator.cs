@@ -18,17 +18,24 @@ namespace GBSCompiler
 				int d_i = lines.IndexOf("PMI:\n");
 				lines.RemoveAt(d_i);
 				string block = inlineAsm.Substring(s_i, s_end_i - s_i);
-				Console.Write(block);
 				lines.Insert(d_i, block);
 			}
-			else if (inlineAsm.Contains("VBHI:"))
+			if (inlineAsm.Contains("VBHI:") && inlineAsm.Contains("END_VBHI:"))
 			{
 				int s_i = inlineAsm.IndexOf("VBHI:");
 				int s_end_i = inlineAsm.IndexOf("END_VBHI:");
 				int d_i = lines.IndexOf("VBHI:\n");
 				lines.RemoveAt(d_i);
 				string block = inlineAsm.Substring(s_i, s_end_i - s_i);
-				Console.Write(block);
+				lines.Insert(d_i, block);
+			}
+			if (inlineAsm.Contains("INITI:") && inlineAsm.Contains("END_INITI:"))
+			{
+				int s_i = inlineAsm.IndexOf("INITI:");
+				int s_end_i = inlineAsm.IndexOf("END_INITI:");
+				int d_i = lines.IndexOf("INITI:\n");
+				lines.RemoveAt(d_i);
+				string block = inlineAsm.Substring(s_i, s_end_i - s_i);
 				lines.Insert(d_i, block);
 			}
 		}
