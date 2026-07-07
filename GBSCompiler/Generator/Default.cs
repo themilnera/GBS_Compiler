@@ -169,7 +169,7 @@ namespace GBSCompiler
 			emit("wNewKeys: db");
 			emit("GameState: db");
 			emit("OAMBuffer: ds 160");
-			emit("");
+			emit(";NVAR");
 
 			emit("BI:");
 			emit("ENDBI:");

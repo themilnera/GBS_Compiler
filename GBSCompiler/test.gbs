@@ -1,14 +1,6 @@
 ﻿int16 number = 25;
 string value = "some text";
-if(number <= 26){
-	number = number + 1;
-}
-func main(){
-	ret number;
-}
-
-call main();
-
+int8 number2 = 10;
 `
 SCODI:
 INCLUDE "BreakoutTiles.asm"
