@@ -24,6 +24,7 @@ namespace GBSCompiler
 
 			emit("SECTION \"Code\", ROM0[$150]");
 			emit("Init:");
+			emit("ld sp, $FFFE");
 			emit("di");
 			emit("call TurnOffLCD");
 			emit("CopyRunDMA:");
@@ -58,9 +59,10 @@ namespace GBSCompiler
 
 			emit("Main:");
 			emit("halt");
+			emit(";NMAIN");
 			emit("jp Main");
 			emit("");
-			
+			emit(";NPMAIN");
 			emit("PMI:");
 			emit("END_PMI:");
 			emit("");
@@ -68,6 +70,7 @@ namespace GBSCompiler
 			emit("VBlankHandler:");
 			emit("call UpdateKeys");
 			emit("call $FF80 ;RunDMA in HRAM");
+			emit(";NVBLANK");
 			emit("VBHI:");
 			emit("END_VBHI:");
 			emit("pop af");

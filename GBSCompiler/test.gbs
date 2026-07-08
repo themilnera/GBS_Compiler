@@ -1,7 +1,15 @@
-﻿int16 number = 25;
-string value = "some text";
+﻿
+
+int16 number = 789;
 int8 number2 = 10;
-int16 number = 29;
+
+func main()
+{
+	number = 357;
+	number2 = 50;
+}
+
+
 `
 SCODI:
 INCLUDE "BreakoutTiles.asm"

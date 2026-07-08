@@ -6,10 +6,13 @@ namespace GBSCompiler
 	{
 		List<string> lines = new List<string>();
 		private List<string> nodeAsm = new List<string>();
+		private List<string> initialized = new List<string>();
+		string asm = "";
 		string inlineAsm = "";
+		string location = "";
 
 		private string[] inserts = ["PMI","VBHI","INITI","BI","SCODI"];
-		private string[] nodeInserts = ["NVAR"];
+		private string[] nodeInserts = ["NVAR", "NMAIN"];
 		private void emit(string line) {
 			lines.Add(line + "\n");
 		}
@@ -27,6 +30,7 @@ namespace GBSCompiler
 			}
 		}
 		private void parseNodeInserts(){
+			nodeAsm.Reverse();
 			foreach(string item in nodeAsm){ 
 				foreach (string insert in nodeInserts)
 				{
@@ -47,7 +51,6 @@ namespace GBSCompiler
 
 		private void parseInitialization(Assignment assignment){
 			string kw = "";
-			string value = "";
 			if (assignment.Type == "T_INT8" || assignment.Type == "T_STRING")
 			{
 				kw = "db";
@@ -57,29 +60,71 @@ namespace GBSCompiler
 				kw = "dw";
 			}
 
-			if (kw != "")
+			if (assignment.Value is Int8 num && num.Value > 255)
 			{
-				if (assignment.Value is Int8 int8 && int8.Value > 255)
+				throw new Exception("Cannot assign value " + num.Value.ToString() + " to int8 " + assignment.Name);
+			}
+			if(location == ""){ //outside of a function
+				initialized.Add(assignment.Name);
+				asm = ";NVAR";
+				asm += assignment.Name + ": " + kw + " ";
+				if (assignment.Value is Int8 eight)
 				{
-					throw new Exception("Cannot assign value " + int8.Value.ToString() + " to int8 " + assignment.Name);
+					asm += eight.Value.ToString();
 				}
-				else
+				if (assignment.Value is Int16 sixteen)
 				{
-					string asm = ";NVAR";
-					asm += assignment.Name + ": " + kw + " ";
+					asm += sixteen.Value.ToString();
+				}
+				if (assignment.Value is String stri){
+					asm += "\""+stri.Value+"\", 0";
+				}
+				nodeAsm.Add(asm+"\n");
+			}
+		}
+		private void parseOperation(Operation opr){
+
+		}
+
+		private void parseReassignment(Assignment assignment){
+			if(location == ""){
+				throw new Exception("Cannot reassign variable outside of function: "+assignment.Value);
+			}
+			else{
+				int num = 0;
+				if(assignment.Type == "T_STRING" && assignment.Value is String str){
+					
+				}
+				else if(assignment.Type == "T_INT8")
+				{
 					if (assignment.Value is Int8 eight)
 					{
-						asm += eight.Value.ToString();
+						asm = location;
+						asm += $"ld hl, {assignment.Name}\n";
+						asm += $"ld a, {eight.Value}\n";
+						asm += $"ld [hl], a\n";
+						nodeAsm.Add(asm);
+						asm = "";
 					}
+				}
+				else if(assignment.Type == "T_INT16"){
 					if (assignment.Value is Int16 sixteen)
 					{
-						asm += sixteen.Value.ToString();
+						asm = location;
+						asm += $"ld hl, {assignment.Name}\n";
+						asm += $"ld a, LOW({sixteen.Value})\n";
+						asm += $"ld [hli], a\n";
+						asm += $"ld a, HIGH({sixteen.Value})\n";
+						asm += $"ld [hl], a\n";
+						nodeAsm.Add(asm);
+						asm = "";
 					}
-					if (assignment.Value is String stri){
-						asm += "\""+stri.Value+"\", 0";
-					}
-					nodeAsm.Add(asm+"\n");
 				}
+				else if (assignment.Value is Operation opr)
+				{
+					parseNode(opr);
+				}
+
 			}
 		}
 
@@ -94,10 +139,45 @@ namespace GBSCompiler
 				}
 			}
 			else if (node is Assignment assignment){
-				if (assignment.Type == "T_INT8" || assignment.Type == "T_INT16" || assignment.Type == "T_STRING"){
+				if ((assignment.Type == "T_INT8" || assignment.Type == "T_INT16" || assignment.Type == "T_STRING") && !initialized.Contains(assignment.Name))
+				{
 					parseInitialization(assignment);
 				}
-
+				else
+				{
+					parseReassignment(assignment);
+				}
+			}
+			else if (node is Function func){
+				if ((func.Name == "MAIN" || func.Name == "VBLANK") && func.Arguments.Length != 0)
+				{
+					throw new Exception("Top level function "+func.Name+" must not have arguments.");
+				}
+				if (func.Name == "MAIN"){
+					location = ";NMAIN";
+					
+					foreach(Node b in func.Body){
+						parseNode(b);
+					}
+				}
+				else if (func.Name == "VBLANK"){
+					location = ";NVBLANK";
+					asm = location;
+				}
+				else{
+					location = ";NPMAIN";
+					asm = location;
+					asm += func.Name + ":\n";
+					foreach(Node a in func.Arguments){
+						parseNode(a);
+					}
+					foreach(Node b in func.Body){
+						parseNode(b);
+					}
+				}
+			}
+			else if (node is Operation opr){
+				parseOperation(opr);
 			}
 			else if (node is InlineASM inline)
 			{

@@ -104,14 +104,21 @@ namespace GBSCompiler
 			consume(Kind.RPAR);
 			consume(Kind.LBRAC);
 			List<Node> body = new List<Node>();
-			while(peek().kind != Kind.RET){
+			while(peek().kind != Kind.RET && peek().kind != Kind.RBRAC)
+			{
 				body.Add(branch());
 			}
-			consume(Kind.RET);
-			Node @return = parseExpression();
-			consume(Kind.SEMC);
-			consume(Kind.RBRAC);
-			return new Function(name, args.ToArray(), body.ToArray(), @return);
+			if(peek().kind == Kind.RET){
+				consume(Kind.RET);
+				Node @return = parseExpression();
+				consume(Kind.SEMC);
+				consume(Kind.RBRAC);
+				return new Function(name, args.ToArray(), body.ToArray(), @return);
+			}
+			else{
+				consume(Kind.RBRAC);
+				return new Function(name, args.ToArray(), body.ToArray(), new Node());
+			}
 		}
 
 		private Node parseIf(){

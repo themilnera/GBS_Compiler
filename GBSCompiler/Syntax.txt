@@ -8,9 +8,15 @@ call func(2, 5);
 //function arguments are assignments, needs a default
 //function call params evaluate as expressions
 
+//a function is necessary since it doesn't make sense here
+//to write code outside of the scope of one of these locations
+//user defined functions inserted post-main and jumped over
+//predefined functions like main() vblank() etc.
+
 //Assignment
 int8 x = 10;
-Type Identifier AssignmentOperator Value
+//in initialization, everything will unfortunately be global
+//because I'm just defining everything with db or dw at the moment
 
 //If statement
 if()
