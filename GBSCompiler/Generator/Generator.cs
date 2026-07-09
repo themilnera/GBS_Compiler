@@ -7,6 +7,7 @@ namespace GBSCompiler
 		List<string> lines = new List<string>();
 		private List<string> nodeAsm = new List<string>();
 		private List<string> initialized = new List<string>();
+		private List<Assignment> initializedStrings = new List<Assignment>();
 		string asm = "";
 		string inlineAsm = "";
 		string location = "";
@@ -77,7 +78,11 @@ namespace GBSCompiler
 					asm += sixteen.Value.ToString();
 				}
 				if (assignment.Value is String stri){
+					initializedStrings.Add(assignment);
 					asm += "\""+stri.Value+"\", 0";
+					if(stri.Padding != 0){
+						asm += $"\n\tds {stri.Padding}, 0";
+					}
 				}
 				nodeAsm.Add(asm+"\n");
 			}
@@ -91,9 +96,40 @@ namespace GBSCompiler
 				throw new Exception("Cannot reassign variable outside of function: "+assignment.Value);
 			}
 			else{
-				int num = 0;
 				if(assignment.Type == "T_STRING" && assignment.Value is String str){
-					
+					foreach(Assignment old_as in initializedStrings){
+						if(assignment.Name == old_as.Name)
+						{
+							if(assignment.Value is String new_str && old_as.Value is String old_str){
+								if(new_str.Length > old_str.Length){
+									throw new Exception("String lengths are fixed, cannot reassign string: "+assignment.Name);	
+								}
+								else{
+									string s_asm = location;
+									location = "";
+									
+									int count = 0;
+									foreach(Assignment ct in initializedStrings){
+										if(ct.Name.StartsWith(assignment.Name)) count++;
+									}
+									int zeroes = old_str.Length - new_str.Length;
+									if(zeroes != 0){
+										new_str.Padding = zeroes;
+									}
+									string newName = old_as.Name+"__X"+count;
+									parseInitialization(new Assignment(new_str, newName, "T_STRING"));;
+									
+									location = s_asm;
+									s_asm += $"ld de, {newName}\n";
+									s_asm += $"ld hl, {assignment.Name}\n";
+									s_asm += $"ld bc, {old_str.Length.ToString()}\n";
+									s_asm += $"call MemCopy\n";
+									nodeAsm.Add(s_asm);
+								}
+							}
+							break;
+						}
+					}
 				}
 				else if(assignment.Type == "T_INT8")
 				{

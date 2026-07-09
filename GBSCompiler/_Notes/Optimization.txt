@@ -1,0 +1,25 @@
+﻿To Optimize:
+
+I'm thinking there'll be things worth leaving in the initial 
+generation that can be optimized for later.
+I can't anticipate every ineffeciency right out of the gate so
+it's perhaps worth only worrying about whether it's functional rn.
+
+	REDUNDANT REFERENCES
+Right now strings are reassigned by creating another with db, then
+copying it over. It would be more optimal to check for reset ""
+and replace that with zeroing out the string, and to check for
+any cases where a string is reassigned to the same value more than
+once and cut any redundant definitions.
+Right now if you reassign a = "string" in one place 
+and a = "string" somewhere else you'll get two: db "string", 0
+Numbers obviously don't have this issue because the registers can
+hold them.
+
+To that point, having defined bytes in WRAM for strings vs
+inline copy into registers then location is probably better for
+long strings, but more overhead for short ones. It may be useful
+in optimization to replace short strings (8 chars or less?)
+with inline  ld a, 'S'  ld [hli], a    kind of thing
+Still would need to copy zeroes for the remaining length
+

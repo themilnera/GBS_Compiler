@@ -31,8 +31,12 @@ namespace GBSCompiler
 	internal class String : Node 
 	{
 		public string Value { get; set; }
+		public int Length { get; set; }
+		public int Padding { get; set; }
 		public String(string value) {
 			Value = value;
+			Length = value.Length;
+			Padding = 0;
 		}
 	}
 	internal class Identifier: Node

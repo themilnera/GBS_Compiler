@@ -249,22 +249,24 @@ namespace GBSCompiler
 		}
 		private Node parseStringExpression()
 		{
-			Node left = parseValue();
-			Token token = peek();
-			while (token.kind == Kind.PLUS)
-			{
-				string op = consume().value;
-				Node right = parseValue();
-				if(right is String)
+			Node node = parseValue();
+			if(node is String left){
+				Token token = peek();
+				while (token.kind == Kind.PLUS)
 				{
-					left = new Operation(op, left, right);
-					token = peek();
+					string op = consume().value;
+					Node right = parseValue();
+					if(right is String r)
+					{
+						left.Value += r.Value;
+					}
+					else{
+						throw new Exception("Cannot implicitly convert types.");
+					}
 				}
-				else{
-					throw new Exception("Cannot implicitly convert types.");
-				}
+				return left;
 			}
-			return left;
+			else { throw new Exception("Failed to parse String expression"); }
 		}
 		
 

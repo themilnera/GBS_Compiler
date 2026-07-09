@@ -2,11 +2,13 @@
 
 int16 number = 789;
 int8 number2 = 10;
+string name = "name of string";
 
 func main()
 {
 	number = 357;
 	number2 = 50;
+	name = "none";
 }
 
 
